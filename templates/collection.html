@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% import "macros/filters.html" as filters %}
+{% import "macros/list.html" as list %}
+{% block title %}Collection{% endblock %}
+{% block head %}
+    {{ super() }}
+    {{ filters.script() }}
+    {{ filters.style() }}
+    {{ list.script() }}
+    {{ list.style() }}
+{% endblock %}
+{% block body %}<body onload="loadFilters()">{% endblock %}
+{% block content %}
+    {{ filters.template(all_genres) }}
+    {% if collection|length == 0 %}
+    <div>
+        Your collection is empty.<br>
+        Find movies in database to add some to your collection!
+    </div>
+{% endif %}
+    {{ list.template(collection) }}
+{% endblock %}

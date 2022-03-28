@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% import "macros/search.html" as search %}
+{% block title %}Search{% endblock %}
+{% block head %}
+    {{ super() }}
+    {{ search.script() }}
+    {{ search.style() }}
+{% endblock %}
+{% block content %}
+    {{ search.template(movies) }}
+{% endblock %}

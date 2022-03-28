@@ -1,0 +1,159 @@
+{% import "macros/rating.html" as rating %}
+{% macro template(movie, collected_movie) -%}
+<div class="movie_container" id="{{ movie.imdbID }}">
+    <div class="poster_container">
+        <img
+            src="{{movie.Poster}}"
+            onerror="
+                this.onerror=null;
+                this.src='/static/altPoster.png'
+            "
+            alt="{{movie.Title}}">
+    </div>
+    <div class="info_container">
+        <div class="header_container">
+            <span class="title">{{movie.Title}}</span>
+            <span class="year">({{movie.Year}})</span>
+            <span class="rating">{{movie.imdbRating}}/10</span>
+        </div>
+        <div class="plot_container">
+            <p>{{movie.Plot}}</p>
+        </div>
+        <div class="details_container">
+            <span class="field">Runtime:</span><span class="value">{{movie.Runtime}}</span><br>
+            <span class="field">Genre:</span><span class="value">{{movie.Genre}}</span><br>
+            <span class="field">Directors:</span><span class="value">{{movie.Director}}</span><br>
+            <span class="field">Writers:</span><span class="value">{{movie.Writer}}</span><br>
+            <span class="field">Actors:</span> <span class="value">{{movie.Actors}}</span>
+        </div>
+        <div class="actions_container">
+            {{ rating.template(movie.imdbID, collected_movie.myRating) }}
+            <div class="collection" id="collection"></div>
+            <script>loadInCollection('{{ collected_movie }}' == 'None' ? false : true)</script>
+        </div>
+    </div>
+</div>
+{%- endmacro %}
+
+{% macro script(movie) -%}
+{{ rating.script() }}
+<script>
+    function loadInCollection(inCollection) {
+        button = document.getElementById("collection")
+        if (inCollection) {
+            button.innerHTML = "Delete from collection"
+            button.onclick = function () {
+                updateInCollection('DELETE')
+            } 
+        } else {
+            button.innerHTML = "Add to collection"
+            button.onclick = function () {
+                updateInCollection('POST')
+            } 
+        }
+    }
+
+    function updateInCollection(method, myRating=null) {
+        fetch("/collection/{{movie.imdbID}}", {
+            method: method,
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                title: '{{movie.Title}}',
+                year: '{{movie.Year}}',
+                genre: '{{movie.Genre}}',
+                imdbRating: '{{movie.imdbRating}}',
+                poster: '{{movie.Poster}}',
+                myRating: myRating
+            })
+        }).then(res => {
+            if (method == 'POST') {
+                loadInCollection(true)
+            } else {
+                loadInCollection(false)
+            }
+            loadMyRating(document.getElementsByClassName('rating_container')[0])
+        });
+    }
+</script>
+{%- endmacro %}
+
+{% macro style() -%}
+{{ rating.style() }}
+<style>
+    .movie_container {
+        display: flex;
+        flex-direction: row;
+    }
+    
+    .poster_container {
+        flex-shrink: 0;
+        width: 220px;
+        aspect-ratio: 210/297;
+    }
+    
+    .poster_container img {
+        width: 100%;
+    }
+    
+    .info_container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin-left: 10px;
+    }
+    
+    .header_container {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+    }
+    
+    .header_container .title {
+        font-size: 26px;
+        text-transform: uppercase;
+    }
+    
+    .header_container .year {
+        margin-left: 10px;
+        font-size: 16px;
+    }
+    
+    .header_container .rating {
+        margin-left: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        color: goldenrod;
+    }
+    
+    .plot_container {
+        font-size: 15px;
+    }
+    
+    .details_container {
+        font-size: 14px;
+    }
+    
+    .details_container .field {
+        font-weight: bold;
+    }
+    
+    .details_container .value {
+        margin-left: 3px;
+    }
+    
+    .actions_container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    
+    .actions_container .collection {
+        background-color: #333;
+        color: #eee;
+        padding: 5px;
+        font-size: 15px;
+        cursor: pointer;
+    }    
+</style>
+{%- endmacro %}

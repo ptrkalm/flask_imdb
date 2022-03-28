@@ -1,0 +1,100 @@
+{% macro template(all_genres) -%}
+<div class="filters_container">
+    <div class="filter_container">
+        <span>Sort by:</span>
+        <div value="title" onclick="sort_by('title')">Title</div>
+        <div value="year" onclick="sort_by('year')">Year</div>
+        <div value="imdbRating" onclick="sort_by('imdbRating')">IMDB Rating</div>
+        <div value="myRating" onclick="sort_by('myRating')">My Rating</div>
+        <script>load_sort_by(document.currentScript.parentNode)</script>
+    </div>
+    <div class="filter_container">
+        <span>Genres:</span>
+        {% for genre in all_genres %}
+            <div value="{{ genre }}" onclick="filter_genre('{{ genre }}')">{{ genre }}</div>
+        {% endfor %}
+        <script>load_genres(document.currentScript.parentNode)</script>
+    </div>
+</div>
+{%- endmacro %}
+
+{% macro script() -%}
+<script>
+    function sort_by(key) {
+        url = new URL(location)
+        url.searchParams.set('sort_by', key)
+
+        window.location = url
+    }
+
+    function load_sort_by(container) {
+        params = (new URL(location)).searchParams
+        sort_by_param = params.has('sort_by') ? params.get('sort_by') : 'title'
+        sort_by_div = container.querySelector('[value=' + sort_by_param + ']')
+        sort_by_div.className = "selected"
+    }
+
+    function filter_genre(genre) {
+        url = new URL(location)
+        if (!url.searchParams.has('genres')) {
+            url.searchParams.set('genres', genre)
+            window.location = url
+            return
+        }
+
+        genres = url.searchParams.get('genres').split(',')
+        if (genres.includes(genre)) {
+            genres.splice(genres.indexOf(genre), 1)
+        } else {
+            genres.push(genre)
+        }
+
+        if (genres.length == 0) {
+            url.searchParams.delete('genres')
+        } else {
+            url.searchParams.set('genres', genres.join(','))
+        }
+
+        window.location = url
+    }
+
+    function load_genres(container) {
+        params = (new URL(location)).searchParams
+        if (params.has('genres')) {
+            genres = params.get('genres').split(',')
+            Array.from(genres).forEach(genre => {
+                genre_div = container.querySelector('[value=' + genre + ']')
+                genre_div.className = "selected"
+            })
+        }
+    }
+</script>
+{%- endmacro %}
+
+{% macro style() -%}
+<style>
+    .filters_container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filter_container {
+        display: flex;
+        flex-direction: row;
+        gap: 20px
+    }
+
+    .filter_container span {
+        font-weight: bold;
+    }
+
+    .filter_container div {
+        cursor: pointer;
+    }
+
+    .filter_container .selected {
+        color: goldenrod
+    }
+</style>
+{%- endmacro %}

@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% import "macros/movie.html" as movie_macro %}
+{% block title %}{{ movie.Title }}{% endblock %}
+{% block head %}
+    {{ super() }}
+    {{ movie_macro.script(movie) }}
+    {{ movie_macro.style() }}
+{% endblock %}
+{% block content %}
+    {{ movie_macro.template(movie, collected_movie) }}
+{% endblock %}

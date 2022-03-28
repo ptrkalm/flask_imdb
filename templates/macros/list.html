@@ -1,0 +1,141 @@
+{% import "macros/rating.html" as rating %}
+{% macro template(collection) -%}
+<div class="list_container">
+    {% for movie in collection %}
+        <div class="movie_container">
+            <div class="poster_container" onclick="openMovie('{{movie.imdbId}}')">
+                <img
+                    src="{{movie.poster}}"
+                    onerror="
+                        this.onerror=null;
+                        this.src='/static/altPoster.png'
+                    "
+                    alt="{{movie.title}}">
+            </div>
+            <div class="info_container">
+                <div class="header_container" onclick="openMovie('{{movie.imdbId}}')">
+                    <div class="title">{{movie.title|safe}}</div>
+                    <div class="year">({{movie.year}})</div>
+                    <div class="genre">{{movie.genre}}</div>
+                    <div class="rating">{{movie.imdbRating}}/10</div>
+                </div>
+                <div class="footer_container">
+                    {{ rating.template(movie.imdbId, movie.myRating) }}
+                    <div 
+                        class="delete"
+                        onclick="deleteFromCollection('{{movie.imdbId}}', this)">
+                        Delete from collection
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{%- endmacro %}
+
+{% macro script() -%}
+{{ rating.script() }}
+<script>
+    async function openMovie(id) {
+        window.location = "http:///127.0.0.1:5000/movie/" + id
+    }
+
+    async function deleteFromCollection(id, item) {
+        fetch("http:///127.0.0.1:5000/collection/" + id, {
+            method: 'DELETE',
+        }).then(_ => {
+            item.closest(".movie_container").remove()
+        }) 
+    }
+</script>
+{%- endmacro %}
+
+{% macro style() -%}
+{{ rating.style() }}
+<style>
+    .list_container {
+        display: flex;
+        flex-direction: column;
+        width: 900px;
+    }
+    
+    .movie_container {
+        display: flex;
+        flex-direction: row;
+        border: 2px solid #222;
+        height: 70px;
+    }
+    
+    .poster_container {
+        flex-shrink: 0;
+        height: 100%;
+        cursor: pointer;
+    }
+    
+    .poster_container img {
+        width: 50px;
+        height: 70px;
+    }
+    
+    .info_container {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        margin-left: 5px;
+        width: 850px;
+        height: 70px
+    }
+    
+    .header_container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-end;
+        cursor: pointer;
+    }
+    
+    .header_container .title {
+        font-size: 16px;
+        text-transform: uppercase;
+    }
+    
+    .header_container .year {
+        margin-left: 10px;
+        font-size: 12px;
+    }
+    
+    .header_container .genre {
+        margin-left: 10px;
+        font-size: 12px;
+    }
+    
+    .header_container .rating {
+        margin-left: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        color: goldenrod;
+    }
+    
+    .footer_container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+        width: 100%;
+    }
+    
+    .footer_container .delete {
+        background-color: #333;
+        color: #eee;
+        padding: 5px;
+        font-size: 15px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+    
+    .collection_button {
+        background-color: goldenrod;
+        color: white
+    }    
+</style>
+{%- endmacro %}

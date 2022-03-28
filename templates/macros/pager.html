@@ -1,0 +1,96 @@
+{% macro template(results) -%}
+<div class="pager_container">
+    <script>loadPager('{{ results }}')</script>
+</div>
+
+{%- endmacro %}
+
+{% macro script() -%}
+<script>
+    function loadPager(results) {
+        params = (new URL(location)).searchParams
+        page = params.has('page') ? parseInt(params.get('page')) : 1
+        pages = Math.ceil(results/10)
+
+        pager_container = document.getElementsByClassName('pager_container')[0]
+        nodes_to_append = []
+
+        console.log(pages)
+
+        if (page - 2 > 0) {
+            nodes_to_append.push(a(1))
+        }
+        if (page - 3 > 0) {
+            nodes_to_append.push(ellipses())
+        }
+        if (page != 1) nodes_to_append.push(a(page - 1))
+        nodes_to_append.push(current_a(page))
+        if (pages > page) {
+            nodes_to_append.push(a(page + 1))
+            if (pages == page + 2) {
+                nodes_to_append.push(a(page + 2))
+            } else if (pages > page + 2) {
+                nodes_to_append.push(ellipses())
+                nodes_to_append.push(a(pages))
+            }
+        }
+    
+
+        Array.from(nodes_to_append).forEach(node => {
+            pager_container.appendChild(node)
+        })
+    }
+
+    function a(n) {
+        newA = document.createElement('a')
+        newA.innerHTML = n
+        newA.href = pageURL(n)
+        
+        return newA
+    }
+
+    function current_a(n) {
+        newA = document.createElement('a')
+        newA.innerHTML = n
+        newA.className = "current"
+        
+        return newA
+    }
+
+    function ellipses() {
+        newSpan = document.createElement('span')
+        newSpan.innerHTML = '...'
+
+        return newSpan
+    }
+
+    function pageURL(n) {
+        url = new URL(location)
+        url.searchParams.set('page', n)
+
+        return url
+    }
+</script>
+{%- endmacro %}
+
+{% macro style() -%}
+<style>
+    .pager_container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 5px;
+        width: 100%
+    }
+
+    .pager_container a {
+        text-decoration: none;
+        color: #eee;
+    }
+
+    .pager_container .current {
+        text-decoration: underline;
+        color: goldenrod
+    }
+</style>
+{%- endmacro %}

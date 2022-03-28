@@ -1,0 +1,65 @@
+{% macro template() -%}
+<div class="panel_container">
+    <div class="search_container">
+        <input
+            contenteditable type="text"
+            id ="search"
+            placeholder="Search in database..."
+            onkeydown="search(this)">
+    </div>
+    <div 
+        class="collection_button"
+        onclick="openCollection()">
+        My collection
+    </div>
+</div>
+{%- endmacro %}
+
+{% macro script() -%}
+<script>
+    function search(query) {
+        if (event.key == 'Enter') {
+            window.location = "http://127.0.0.1:5000/search/" + query.value
+        }
+    }
+
+    function openCollection() {
+        window.location = "http:///127.0.0.1:5000/collection"
+    }
+</script>
+{%- endmacro %}
+
+{% macro style() -%}
+<style>
+    .panel_container {
+        display: flex;
+        flex-direction: row;
+        width: 100%
+    }
+
+    .search_container {
+        flex: 1;
+    }
+
+    .search_container input {
+        font-family: OpenSans;
+        font-size: 18px;
+        color: white;
+        background-color: #333;
+        width: 650px;
+        height: 30px;
+    }
+
+    .collection_button {
+        box-sizing: border-box;
+        border: solid 1px goldenrod;
+        cursor: pointer;
+        padding: 6px;
+        background-color: #333;
+        width: 200px;
+        text-align: center;
+        text-decoration: underline;
+    }
+</style>
+{%- endmacro %}
+

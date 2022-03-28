@@ -1,0 +1,47 @@
+{% import "macros/panel.html" as panel %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block head %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        @font-face {
+            font-family: OpenSans;
+            src: url("/static/OpenSans.ttf");
+        }
+        
+        body {
+            font-family: OpenSans;
+            color: #eee;
+            background-color: #111;
+        }
+        
+        .horizontal_container {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .vertical_container {
+            display: flex;
+            flex-direction: column;
+            row-gap: 20px;
+            align-items: flex-start;
+            width: 900px;
+        }
+    </style>
+    {{ panel.script() }}
+    {{ panel.style() }}
+{% endblock %}
+</head>
+{% block body_node %}<body>{% endblock %}
+    <div class="horizontal_container">
+        <div class="vertical_container">
+            {{ panel.template() }}
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>
