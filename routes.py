@@ -1,11 +1,12 @@
 from flask import *
 from database import session, Movie
 from sqlalchemy import or_
-from __main__ import app
 import json
 import requests
 import itertools
 import os
+
+app = Flask(__name__)
 
 url = "https://movie-database-alternative.p.rapidapi.com/"
 
