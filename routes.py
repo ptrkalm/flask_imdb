@@ -5,12 +5,13 @@ from __main__ import app
 import json
 import requests
 import itertools
+import os
 
 url = "https://movie-database-imdb-alternative.p.rapidapi.com/"
 
 headers = {
     'x-rapidapi-host': "movie-database-imdb-alternative.p.rapidapi.com",
-    'x-rapidapi-key': "eb8e9056e8msh28a7e1095f7ff2dp1921dejsn02694f398071"
+    'x-rapidapi-key': os.getenv('IMDB_RAPIDAPI_API_KEY')
 }
 
 
