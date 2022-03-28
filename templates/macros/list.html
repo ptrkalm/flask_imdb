@@ -37,11 +37,11 @@
 {{ rating.script() }}
 <script>
     async function openMovie(id) {
-        window.location = "http:///127.0.0.1:5000/movie/" + id
+        window.location = "https://ptrklam.pythonanywhere.com/movie/" + id
     }
 
     async function deleteFromCollection(id, item) {
-        fetch("http:///127.0.0.1:5000/collection/" + id, {
+        fetch("https://ptrklam.pythonanywhere.com/collection/" + id, {
             method: 'DELETE',
         }).then(_ => {
             item.closest(".movie_container").remove()
