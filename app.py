@@ -18,7 +18,7 @@ headers = {
 
 @app.route('/')
 def home():
-    return redirect("http://127.0.0.1:5000/collection", code=302)
+    return redirect("https://ptrklam.pythonanywhere.com/collection", code=302)
 
 
 @app.route('/collection')
