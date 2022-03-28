@@ -7,11 +7,11 @@ import requests
 import itertools
 import os
 
-url = "https://movie-database-imdb-alternative.p.rapidapi.com/"
+url = "https://movie-database-alternative.p.rapidapi.com/"
 
 headers = {
-    'x-rapidapi-host': "movie-database-imdb-alternative.p.rapidapi.com",
-    'x-rapidapi-key': os.getenv('IMDB_RAPIDAPI_API_KEY')
+    'X-RapidAPI-Host': "movie-database-alternative.p.rapidapi.com",
+    'X-RapidAPI-Key': os.getenv('IMDB_RAPIDAPI_API_KEY')
 }
 
 
@@ -158,6 +158,7 @@ def search(query=None):
         headers=headers,
         params={'s': query, 'type': 'movie', 'page': page}
     ).json()
+    print(response)
     movies = []
     results = 0
     if (response["Response"] == "True"):
